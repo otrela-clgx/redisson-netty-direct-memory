@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RedissonDirectMemoryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <output_file path="C:\Users\ostr\dev\corelogic\redisson-direct-memory\console-logs.txt" is_save="true" />
+    <module name="redisson-direct-memory.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.corelogic.bis.tax.test.redisson_direct_memory.RedissonDirectMemoryApplication" />
+    <option name="VM_PARAMETERS" value="-Dio.netty.leakDetection.level=advanced -Dio.netty.leakDetection.targetRecords=40 -XX:MaxDirectMemorySize=64M" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
