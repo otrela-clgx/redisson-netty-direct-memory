@@ -1,0 +1,31 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.corelogic.bis.tax.test'
+version = '0.0.1-SNAPSHOT'
+
+//ext {
+//	set('netty.version', '4.1.74.Final')
+//}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.redisson:redisson-spring-boot-starter:3.37.0'
+
+//	implementation 'io.netty:netty-buffer:4.1.75.Final'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
