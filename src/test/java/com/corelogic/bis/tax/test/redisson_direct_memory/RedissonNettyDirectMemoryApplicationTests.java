@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RedissonDirectMemoryApplicationTests {
+class RedissonNettyDirectMemoryApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RedissonDirectMemoryApplication {
+public class RedissonNettyDirectMemoryApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(RedissonDirectMemoryApplication.class, args);
+    SpringApplication.run(RedissonNettyDirectMemoryApplication.class, args);
   }
 
 }
