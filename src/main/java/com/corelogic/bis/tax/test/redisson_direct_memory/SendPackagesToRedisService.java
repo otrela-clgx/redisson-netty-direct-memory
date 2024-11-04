@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class SendPackagesToRedisService {
 
@@ -39,21 +41,7 @@ public class SendPackagesToRedisService {
 
   public void sendPackagesToRedis(int objectsInPackage, int numberOfPackages, int batchSize, int poolSize) {
     try (ExecutorService executorService = Executors.newFixedThreadPool(poolSize)) {
-      List<Callable<Void>> tasks = new ArrayList<>();
-
-      for (int j = 0; j < numberOfPackages; j++) {
-        HashMap<Integer, TestObject> hashMap = new HashMap<>();
-        for (int i = 0; i < objectsInPackage; i++) {
-          TestObject testObject = new TestObject("value" + i + j, i);
-          hashMap.put(testObject.hashCode(), testObject);
-        }
-
-        tasks.add(() -> {
-          redissonCacheMap.putAll(hashMap, batchSize);
-          logDirectMemoryMetrics("Direct memory info after sending packages to Redis");
-          return null;
-        });
-      }
+      List<Callable<Void>> tasks = preparePackages(objectsInPackage, numberOfPackages, batchSize);
 
       List<Future<Void>> results = executorService.invokeAll(tasks);
       for (Future<Void> result : results) {
@@ -61,7 +49,27 @@ public class SendPackagesToRedisService {
       }
     } catch (Exception e) {
       log.error("Error while sending packages to Redis", e);
+      throw new RuntimeException(e.getCause());
     }
+  }
+
+  private List<Callable<Void>> preparePackages(int objectsInPackage, int numberOfPackages, int batchSize) {
+    List<Callable<Void>> tasks = new ArrayList<>();
+
+    for (int j = 0; j < numberOfPackages; j++) {
+      HashMap<Integer, TestObject> hashMap = new HashMap<>();
+      for (int i = 0; i < objectsInPackage; i++) {
+        TestObject testObject = new TestObject("value" + i + j, i);
+        hashMap.put(testObject.hashCode(), testObject);
+      }
+
+      tasks.add(() -> {
+        redissonCacheMap.putAll(hashMap, batchSize);
+        logDirectMemoryMetrics("Direct memory info after sending packages to Redis");
+        return null;
+      });
+    }
+    return tasks;
   }
 
   public void logMemoryMetrics() {

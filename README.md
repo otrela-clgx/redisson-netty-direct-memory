@@ -12,7 +12,7 @@ docker-compose up -d
 ```
 2. Build artifact 
 ```shell
-gradle clean build
+./gradlew clean build
 ```
 3. Run application 
 ```shell
@@ -20,7 +20,7 @@ java -XX:MaxDirectMemorySize=64M -jar build/libs/redisson-netty-direct-memory-0.
 ```
 
 ## How to reproduce
-Send POST request to the application with the following parameters. Do it few times and watch used direct memory log.
+Send POST request to the application with the following parameters. Do it few times (to invoke OOM it might sometimes take dozens of times) and watch used direct memory log.
 ```shell
 curl -X POST 'http://localhost:8080/send-packages-to-redis?objectsInPackage=8000&numberOfPackages=200&batchSize=8000&poolSize=4'
 ```
