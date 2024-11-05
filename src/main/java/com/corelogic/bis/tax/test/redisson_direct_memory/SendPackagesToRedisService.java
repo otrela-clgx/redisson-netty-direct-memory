@@ -20,16 +20,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class SendPackagesToRedisService {
 
   private static final Logger log = LoggerFactory.getLogger(SendPackagesToRedisService.class);
 
+//  private final ExecutorService executorService;
   private final RLocalCachedMap<Integer, TestObject> redissonCacheMap;
 
   public SendPackagesToRedisService(RedissonClient redissonClient) {
+//    this.executorService = Executors.newFixedThreadPool(4);
+
     Config config = redissonClient.getConfig();
     config.setCodec(new JsonJacksonCodec());
     RedissonClient overridedRedissonClient = Redisson.create(config);
@@ -40,7 +41,10 @@ public class SendPackagesToRedisService {
   }
 
   public void sendPackagesToRedis(int objectsInPackage, int numberOfPackages, int batchSize, int poolSize) {
+    log.info("Starting process of sending packages to Redis... [objectsInPackage: {}, numberOfPackages: {}, batchSize: {}, poolSize: {}]",
+        objectsInPackage, numberOfPackages, batchSize, poolSize);
     try (ExecutorService executorService = Executors.newFixedThreadPool(poolSize)) {
+//    try {
       List<Callable<Void>> tasks = preparePackages(objectsInPackage, numberOfPackages, batchSize);
 
       List<Future<Void>> results = executorService.invokeAll(tasks);
@@ -51,6 +55,7 @@ public class SendPackagesToRedisService {
       log.error("Error while sending packages to Redis", e);
       throw new RuntimeException(e.getCause());
     }
+    log.info("Finished sending packages to Redis");
   }
 
   private List<Callable<Void>> preparePackages(int objectsInPackage, int numberOfPackages, int batchSize) {
